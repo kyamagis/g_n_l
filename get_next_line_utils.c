@@ -6,111 +6,115 @@
 /*   By: kyamagis <kyamagis@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 16:47:41 by kyamagis          #+#    #+#             */
-/*   Updated: 2022/05/06 18:41:43 by kyamagis         ###   ########.fr       */
+/*   Updated: 2022/05/13 21:00:39 by kyamagis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-#define FD_CB_NUM 5
-static Fd_CB_t fdCB[FD_CB_NUM];
-
-// fd制御ブロックを探す
-Fd_CB_t *find_fd_cb(int fd)
+char	*ft_join_to_nl(char const *s1, char const *s2) //const でなければならない？
 {
-	int	i;
-	int	emptyIx;
+	char	*str;
+	size_t	lens1;
+	size_t	lens2;
+	size_t	i;
 
-	emptyIx = -1;
+	if (s1 == NULL)
+		lens1 = 
+	lens1 = ft_strlen(s1);
 	i = 0;
-	while (i < FD_CB_NUM) 
-	{
-		if (fdCB[i].flg != 0 && fdCB[i].fd == fd)
-			return (&fdCB[i]);     // 登録済み
-		else
-		{
-			if (emptyIx == -1)
-				emptyIx = i;
-		}
-		++i;
-	}
-	if (emptyIx == -1)
-		return (NULL);        // 登録できる空きが無い
-	fdCB[emptyIx].flg = 1;        // 使用中
-	fdCB[emptyIx].fd = fd;
-	fdCB[emptyIx].pt = NULL;
-	return (&fdCB[emptyIx]);
+	while (s2[i] != '\0' && s2[i] != '\n')
+		i++;
+	if (s2[i] == '\n')
+		i++;
+	lens2 = i;
+	str = (char *)malloc(sizeof(char) * (lens1 + lens2 + 1));
+	if (str == NULL)
+		return (NULL);
+	ft_strlcpy(str, s1, lens1 + 1);
+	ft_strlcpy(&str[lens1], s2, lens2 + 1);
+	free(s1);
+	s1 == NULL;
+	free(s2);
+	s2 == NULL;
+	return (str);
 }
 
-
-// fdCBをクリアする
-void	clear_fd_cb(Fd_CB_t *fdCB)
+int	ft_strchr_idx(const char *s, int c)
 {
-	Data_Buf_t	*currPt;
-	Data_Buf_t	*nxtPt;
+	size_t			i;
+	unsigned char	*suc;
+	unsigned char	cuc;
 
-	currPt = fdCB->pt;
-	while (currPt != NULL)        // 確保済みバッファを開放する
+	suc = (unsigned char *)s;
+	cuc = (unsigned char)c;
+	i = 0;
+	while (suc[i] != '\0')
 	{
-		nxtPt = currPt->nxt;
-		free(currPt);
-		currPt = nxtPt;
+		if (suc[i] == cuc)
+			return (i);
+		i++;
 	}
-	fdCB->flg = 0;              // fdCBをクリアする
+	if (cuc == '\0')
+		return (i);
+	return (0);
 }
 
-
-// BFエリアの獲得とファイルの読出し
-Data_Buf_t	*read_file(int fd)
+char	*ft_strdup(const char *s1)
 {
-	Data_Buf_t	*currPt;
+	char	*prc;
+	size_t	lens1;
 
-	currPt = (Data_Buf_t *)malloc(sizeof(Data_Buf_t));
-	if (currPt == NULL)
+	lens1 = ft_strlen(s1);
+	prc = (char *)malloc(sizeof(char) * (lens1 + 1));
+	if (prc == NULL)
 		return (NULL);
-	currPt->sz = read(fd, currPt->bf, BUFFER_SIZE);
-	if (currPt->sz <= 0)
-	{
-		free(currPt);
-		return (NULL);
-	}
-	currPt->nxt = NULL;
-	currPt->ix  = 0;
-	return currPt;
+	ft_strlcpy(prc, s1, lens1 + 1);
+	return (prc);
 }
 
-// バッファを開放しながら1行を作る
-// lineSzは1以上
-char	*copy_data(Fd_CB_t *fdCB, int lineSz)
+size_t	ft_strlcpy(char *dest, const char *src, size_t size)
 {
-	char		*lineBf;
-	Data_Buf_t	*currPt;
-	Data_Buf_t	*emptytPt;
-	size_t		distIx;
-	int			cpSz;
+	size_t	i;
+	size_t	lensrc;
+	char	*castsrc;
 
-	lineBf = (char *)malloc(lineSz + 1);
-	if (lineBf == NULL)
-		return (NULL);
-	lineBf[lineSz] = 0;         // 不要な時は消す
-	distIx = 0;
-	currPt = fdCB->pt;
-	while (lineSz != 0)
+	castsrc = (char *) src;
+	lensrc = ft_strlen(src);
+	if (size == 0)
+		return (lensrc);
+	i = 0;
+	while (i < size - 1 && castsrc[i] != '\0')
 	{
-		cpSz = currPt->sz - currPt->ix;
-		if (cpSz > lineSz)
-			cpSz = lineSz;
-		ft_memcpy(&lineBf[distIx], &currPt->bf[currPt->ix], cpSz);
-		lineSz -= cpSz;
-		distIx += cpSz;
-		currPt->ix += cpSz;
-		if (currPt->ix == currPt->sz)
-		{
-			emptytPt = currPt;
-			currPt = currPt->nxt;
-			free(emptytPt);
-		}
+		dest[i] = castsrc[i];
+		i++;
 	}
-	fdCB->pt = currPt;
-	return (lineBf);
+	dest[i] = '\0';
+	return (lensrc);
+
+size_t	ft_strlen(const char *s)
+{
+	size_t	i;
+
+	i = 0;
+	while (s[i] != '\0')
+		i++;
+	return (i);
+}
+
+char	*ft_substr(char const *s, unsigned int start, size_t len)
+{
+	char	*substr;
+
+	if (s == NULL)
+		return (NULL);
+	if (start >= ft_strlen(s))
+		return (ft_strdup(""));
+	if (ft_strlen(&s[start]) < len)
+		len = ft_strlen(&s[start]);
+	substr = (char *)malloc (sizeof (char) * (len + 1));
+	if (substr == NULL)
+		return (NULL);
+	ft_strlcpy(substr, &s[start], len + 1);
+	return (substr);
 }
