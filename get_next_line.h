@@ -6,7 +6,7 @@
 /*   By: kyamagis <kyamagis@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 11:04:28 by kyamagis          #+#    #+#             */
-/*   Updated: 2022/05/13 21:03:38 by kyamagis         ###   ########.fr       */
+/*   Updated: 2022/05/14 16:27:52 by kyamagis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,32 +20,42 @@
 # include <unistd.h>
 
 # define FD_CB_NUM 5
-# define BUFFER_SIZE     10      // todo デバッグ用。デバッグ終了時に、本行を消すこと
+# define BUFFER_SIZE 10
 
-typedef struct data_buff_t 
+typedef struct t_data_buff
+{
+	char	*saved;
+	char	*prefix;
+	char	*buff;
+	int		readsz;
+	int		newl_flag;
+	int		null_flg;
+}	t_data_buff;
+
+typedef struct t_fd_cb
+{
+	int			flg;
+	int			fd;
+	t_data_buff	*pt;
+}	t_fd_cb;
+
+char		*get_next_line(int fd);
+void	*ft_join_to_nl(t_data_buff *outp_line);
+int			ft_strchr_idx(char *s, int c);
+char		*ft_strdup(char *s1);
+size_t		ft_strlcpy(char *dest, char *src, size_t size);
+size_t		ft_strlen(char *s);
+#endif
+/*
+typedef struct t_data_buff
 {
 	char	*joined;
 	int		nul_flag;
 	int		readsz;
 	char	*buff;
-} data_buff_t;
+}	t_data_buff;
 
-// fd制御ブロック
-typedef struct fd_cb_t 
-{
-	int			flg;        // 0=empty, 1=use
-	int			fd;
-	data_buff_t	*pt;
-} fd_cb_t;
-
-char	*get_next_line(int fd);
-char	*ft_join_to_nl(char const *s1, char const *s2);
-int		ft_strchr_idx(const char *s, int c);
-char	*ft_strdup(const char *s1);
-size_t	ft_strlcpy(char *dest, const char *src, size_t size);
-size_t	ft_strlen(const char *s);
-#endif
-
-/*
-
+outp_line->buff = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1)); // 同じ意味？
+	if (outp_line->buff == NULL)
+		return (NULL);
 */

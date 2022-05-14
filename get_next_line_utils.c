@@ -6,61 +6,53 @@
 /*   By: kyamagis <kyamagis@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 16:47:41 by kyamagis          #+#    #+#             */
-/*   Updated: 2022/05/13 21:00:39 by kyamagis         ###   ########.fr       */
+/*   Updated: 2022/05/14 17:11:36 by kyamagis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*ft_join_to_nl(char const *s1, char const *s2) //const でなければならない？
+size_t	ft_strlen_to_nl (t_data_buff *outp_line)
 {
-	char	*str;
-	size_t	lens1;
-	size_t	lens2;
-	size_t	i;
+	size_t len_bf;
 
-	if (s1 == NULL)
-		lens1 = 
-	lens1 = ft_strlen(s1);
-	i = 0;
-	while (s2[i] != '\0' && s2[i] != '\n')
-		i++;
-	if (s2[i] == '\n')
-		i++;
-	lens2 = i;
-	str = (char *)malloc(sizeof(char) * (lens1 + lens2 + 1));
-	if (str == NULL)
-		return (NULL);
-	ft_strlcpy(str, s1, lens1 + 1);
-	ft_strlcpy(&str[lens1], s2, lens2 + 1);
-	free(s1);
-	s1 == NULL;
-	free(s2);
-	s2 == NULL;
-	return (str);
-}
-
-int	ft_strchr_idx(const char *s, int c)
-{
-	size_t			i;
-	unsigned char	*suc;
-	unsigned char	cuc;
-
-	suc = (unsigned char *)s;
-	cuc = (unsigned char)c;
-	i = 0;
-	while (suc[i] != '\0')
+	len_bf = 0;
+	while (outp_line->buff[len_bf] != '\0' && outp_line->buff[len_bf] != '\n')
+		len_bf++;
+	if (outp_line->buff[len_bf] == '\n')
 	{
-		if (suc[i] == cuc)
-			return (i);
-		i++;
+		outp_line->newl_flag = 1;
+		len_bf++;
+		outp_line->saved = ft_strdup(&outp_line->buff[len_bf]);
+		if (outp_line->saved == NULL)
+			outp_line->null_flg = 1;
 	}
-	if (cuc == '\0')
-		return (i);
-	return (0);
+	return (len_bf);
 }
 
-char	*ft_strdup(const char *s1)
+void	*ft_join_to_nl(t_data_buff *outp_line)
+{
+	char	*joined;
+	size_t	len_pr;
+	size_t	len_bf;
+
+	len_pr = ft_strlen(outp_line->prefix);
+	len_bf = ft_strlen_to_nl(outp_line);
+	if (outp_line->newl_flag == 1)
+		return;
+	joined = (char *)malloc(sizeof(char) * (len_pr + len_bf + 1));
+	if (joined == NULL)
+	{
+		outp_line->null_flg = 1;
+		return;
+	}
+	ft_strlcpy(joined, outp_line->prefix, len_pr + 1);
+	ft_strlcpy(&joined[len_pr], outp_line->buff, len_bf + 1);
+	ft_free_str(outp_line);//free(buff);buff == NULL いる？
+	outp_line->prefix = joined;
+}
+
+char	*ft_strdup(char *s1)
 {
 	char	*prc;
 	size_t	lens1;
@@ -73,7 +65,7 @@ char	*ft_strdup(const char *s1)
 	return (prc);
 }
 
-size_t	ft_strlcpy(char *dest, const char *src, size_t size)
+size_t	ft_strlcpy(char *dest, char *src, size_t size)
 {
 	size_t	i;
 	size_t	lensrc;
@@ -91,8 +83,9 @@ size_t	ft_strlcpy(char *dest, const char *src, size_t size)
 	}
 	dest[i] = '\0';
 	return (lensrc);
+}
 
-size_t	ft_strlen(const char *s)
+size_t	ft_strlen(char *s)
 {
 	size_t	i;
 
@@ -102,19 +95,20 @@ size_t	ft_strlen(const char *s)
 	return (i);
 }
 
-char	*ft_substr(char const *s, unsigned int start, size_t len)
+int	main(void)
 {
-	char	*substr;
+	char *str;
+	t_data_buff	*outp_1;
 
-	if (s == NULL)
-		return (NULL);
-	if (start >= ft_strlen(s))
-		return (ft_strdup(""));
-	if (ft_strlen(&s[start]) < len)
-		len = ft_strlen(&s[start]);
-	substr = (char *)malloc (sizeof (char) * (len + 1));
-	if (substr == NULL)
-		return (NULL);
-	ft_strlcpy(substr, &s[start], len + 1);
-	return (substr);
+	// outp_1->prefix = ;
+	// outp_1->buff = ;
+	// outp_1->saved = ;
+	outp_1 = (t_data_buff *)malloc(sizeof(t_data_buff));
+
+	ft_str_nl (outp_1, 0);
+	printf("%d", outp_1->null_flg);
+	
+	str = (char *)malloc(sizeof(char) * (5));
+	str[1] = '1';
+	printf("%s", str);
 }
