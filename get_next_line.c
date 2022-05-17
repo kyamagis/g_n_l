@@ -6,7 +6,7 @@
 /*   By: kyamagis <kyamagis@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 10:45:21 by kyamagis          #+#    #+#             */
-/*   Updated: 2022/05/16 19:09:04 by kyamagis         ###   ########.fr       */
+/*   Updated: 2022/05/16 20:42:52 by kyamagis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,13 +66,12 @@ static char	*read_to_null(int fd, char *saved_str)
 	while (0 < readsz && ft_strchr(saved_str, '\n') == NULL)
 	{
 		readsz = read(fd, buff, BUFFER_SIZE);
-		if (readsz == -1)
+		if (readsz == -1 || (readsz == 0 && saved_str[0] == '\0'))
 		{
 			ft_free_str(buff);
 			return (ft_free_str(saved_str));
 		}
-		while (readsz < BUFFER_SIZE)
-			buff[readsz++] = '\0';
+		buff[readsz] = '\0';
 		saved_str = ft_join_to_null(saved_str, buff);
 		if (saved_str == NULL)
 			return (NULL);
@@ -123,6 +122,27 @@ char	*get_next_line(int fd)
 
 int	main(void)
 {
+	int		fd;
+	char	*lineBf;
+
+	fd = open("test.txt", O_RDONLY , 0);
+	if (fd < 0)
+	{
+		printf("!!! ERROR 1 !!!\n");
+	}
+	while (1)
+	{
+		lineBf = get_next_line(fd);
+		
+		
+		if (lineBf == NULL)
+		{
+			printf("EOF\n");
+			break;
+		}
+		printf("%s", lineBf);
+	}
+
 	// int		fd;
 	// char	*lineBf;
 
@@ -131,16 +151,14 @@ int	main(void)
 	// {
 	// 	printf("!!! ERROR 1 !!!\n");
 	// }
-	// while (1)
-	// {
+	
 	// 	lineBf = get_next_line(fd);
-	// 	if (lineBf == NULL)
-	// 	{
-	// 		printf("EOF\n");
-	// 		break;
-	// 	}
 	// 	printf("%s", lineBf);
-	// }
+	// 	lineBf = get_next_line(fd);
+	// 	printf("%s", lineBf);
+	// 	lineBf = get_next_line(fd);
+	// 	printf("%s", lineBf);
+		
 
 	// int		fd;
 	// char	*lineBf;
