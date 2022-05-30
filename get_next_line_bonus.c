@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kyamagis <kyamagis@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 10:45:21 by kyamagis          #+#    #+#             */
-/*   Updated: 2022/05/19 10:36:59 by kyamagis         ###   ########.fr       */
+/*   Updated: 2022/05/23 12:54:21 by kyamagis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 static char	*dup_nl_to_null(char *saved_str)
 {
@@ -91,25 +91,25 @@ static char	*read_to_null(int fd, char *saved_str)
 
 char	*get_next_line(int fd)
 {
-	static char	*saved_str;
+	static char	*saved_str[256];
 	char		*output_line;
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (fd < 0 || BUFFER_SIZE <= 0 || 255 < fd)
 		return (NULL);
-	if (saved_str == NULL)
+	if (saved_str[fd] == NULL)
 	{
-		saved_str = ft_strdup("");
-		if (saved_str == NULL)
+		saved_str[fd] = ft_strdup("");
+		if (saved_str[fd] == NULL)
 			return (NULL);
 	}
-	saved_str = read_to_null(fd, saved_str);
-	if (saved_str == NULL)
+	saved_str[fd] = read_to_null(fd, saved_str[fd]);
+	if (saved_str[fd] == NULL)
 		return (NULL);
-	output_line = dup_to_nl(saved_str);
+	output_line = dup_to_nl(saved_str[fd]);
 	if (output_line == NULL)
-		return (ft_free_str(NULL, saved_str));
-	saved_str = dup_nl_to_null(saved_str);
-	if (saved_str == NULL)
+		return (ft_free_str(NULL, saved_str[fd]));
+	saved_str[fd] = dup_nl_to_null(saved_str[fd]);
+	if (saved_str[fd] == NULL)
 		return (ft_free_str(output_line, NULL));
 	return (output_line);
 }
