@@ -6,13 +6,13 @@
 /*   By: kyamagis <kyamagis@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 11:04:28 by kyamagis          #+#    #+#             */
-/*   Updated: 2022/05/18 19:48:34 by kyamagis         ###   ########.fr       */
+/*   Updated: 2022/06/01 14:47:40 by kyamagis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GET_NEXT_LINE_BONUS_H
 # define GET_NEXT_LINE_BONUS_H
-
+# define FD_MAX 256
 # include <stdlib.h>
 # include <stdio.h>
 # include <limits.h>

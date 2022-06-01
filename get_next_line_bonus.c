@@ -6,7 +6,7 @@
 /*   By: kyamagis <kyamagis@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 10:45:21 by kyamagis          #+#    #+#             */
-/*   Updated: 2022/05/23 12:54:21 by kyamagis         ###   ########.fr       */
+/*   Updated: 2022/06/01 14:47:31 by kyamagis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,10 +91,10 @@ static char	*read_to_null(int fd, char *saved_str)
 
 char	*get_next_line(int fd)
 {
-	static char	*saved_str[256];
+	static char	*saved_str[FD_MAX];
 	char		*output_line;
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || 255 < fd)
+	if (fd < 0 || BUFFER_SIZE <= 0 || FD_MAX <= fd)
 		return (NULL);
 	if (saved_str[fd] == NULL)
 	{
@@ -117,141 +117,34 @@ char	*get_next_line(int fd)
 /*int	main(void)
 {
 	int		fd;
-	char	*lineBf;
-
-	fd = open("test", O_RDONLY , 0);
-	if (fd < 0)
-	{
-		printf("!!! ERROR 1 !!!\n");
-	}
-	while (1)
-	{
-		lineBf = get_next_line(fd);
-		
-		
-		if (lineBf == NULL)
-		{
-			printf("EOF\n");
-			break;
-		}
-		printf("%s", lineBf);
-	}
-
-	printf("+++++++++++++++++++++++++++++++++++++++++\n");
-
-	int		fd;
-	char	*lineBf;
-
-	fd = open("empty", O_RDONLY , 0);
-	if (fd < 0)
-	{
-		printf("!!! ERROR 1 !!!\n");
-	}
-	while (1)
-	{
-		lineBf = get_next_line(fd);
-		
-		
-		if (lineBf == NULL)
-		{
-			printf("EOF\n");
-			break;
-		}
-		printf("%s", lineBf);
-	}
-
-	printf("+++++++++++++++++++++++++++++++++++++++++\n");
-	
-	fd = open("test", O_RDONLY , 0);
-	buff = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
-		readsz = read(fd, buff, BUFFER_SIZE);
-	printf("%zd\n", readsz);
-	buff[readsz] = '\0';
-	printf("%s\n", buff);
-	
-	printf("check_read_+++++++++++++++++++++++++++++++++++++++++\n");
-
-	printf("%s\n", ft_join_to_null(ft_strdup(""), "GUNDUM"));
-	printf("%s\n", ft_join_to_null("Z_", "GUNDUM"));
-	int		fd;
-	char	*lineBf;
-
-	fd = open("empty", O_RDONLY , 0);
-	if (fd < 0)
-		printf("!!! ERROR 1 !!!\n");
-	lineBf = read_to_null(fd, ft_strdup(""));
-	printf("%s\n", lineBf);
-
-	printf("+++++++++++++++++++++++++++++++++++++++++\n");
-
-	int		fd;
-	char	*lineBf;
-
-	fd = open("test.txt", O_RDONLY , 0);
-	if (fd < 0)
-	{
-		printf("!!! ERROR 1 !!!\n");
-	}
-	
-		lineBf = get_next_line(fd);
-		printf("%s", lineBf);
-		lineBf = get_next_line(fd);
-		printf("%s", lineBf);
-		lineBf = get_next_line(fd);
-		printf("%s", lineBf);
-		
-
-	int		fd;
+	int		fd1;
+	int		fd2;
 	char	*lineBf;
 	char	*lineBf1;
+	char	*lineBf2;
 
 	fd = open("test.txt", O_RDONLY , 0);
-	lineBf = get_next_line(fd);
-	printf("%s", lineBf);
-	
-	lineBf1 = read_to_null(fd, NULL);
-	printf("%s", lineBf1);
-	
-
-
-	int		fd;
-	char	*lineBf;
-	char	*str1;
-	char	*str2;
-	char	*str3;
-	char	*str4;
-	char	*str5;
-	size_t nl_point;
-
-	nl_point = 0;
-	fd = open("test.txt", O_RDONLY , 0);
+	fd1 = open("test1.txt", O_RDONLY , 0);
+	fd2 = open("test2.txt", O_RDONLY , 0);
 	if (fd < 0)
 	{
 		printf("!!! ERROR 1 !!!\n");
-		exit(1);
 	}
-	
-		lineBf = read_to_null(fd, NULL);
-		if (lineBf == NULL)
+	while (1)
+	{
+		lineBf = get_next_line(fd);
+		lineBf1 = get_next_line(fd1);
+		lineBf2 = get_next_line(fd2);
+		
+		if (lineBf == NULL || lineBf1 == NULL || lineBf2 == NULL)
 		{
 			printf("EOF\n");
+			break;
 		}
-		printf("%s\n", lineBf);
-	str1= ft_strdup("get");
-	str2= ft_strdup("_wild");
-	str3= ft_strdup("\nabc");
-	str4= ft_strdup("ab\n\nb");
-	str5= ft_strdup("a\nb");
-	
-	printf("\\nabc %s\n", ft_dup_to_nl(str3));
-	printf("ab\\n %s\n", ft_dup_to_nl(str4));
-	printf("a\\nb %s\n", ft_dup_to_nl(str5));
-	
+		printf("%s", lineBf);
+		printf("%s", lineBf1);
+		printf("%s", lineBf2);
+	}
 
-	printf("%s\n", ft_join_to_null(NULL, "abxd"));
-	printf("%s\n", ft_join_to_null(str1, str2));
-
-	printf("\\nabc %s\n", dup_to_null(str3));
-	printf("ab\\n %s\n", dup_to_null(str4));
-	printf("a\\nb %s\n", dup_to_null(str5));
+	printf("+++++++++++++++++++++++++++++++++++++++++\n");
 }*/
