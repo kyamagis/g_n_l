@@ -6,7 +6,7 @@
 /*   By: kyamagis <kyamagis@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 11:04:28 by kyamagis          #+#    #+#             */
-/*   Updated: 2022/06/01 13:07:05 by kyamagis         ###   ########.fr       */
+/*   Updated: 2022/06/07 19:15:09 by kyamagis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,6 @@ char	*get_next_line(int fd);
 char	*ft_strchr(char *s, int c);
 size_t	ft_strlen(char *s);
 size_t	ft_strlcpy(char *dest, char *src, size_t size);
-char	*ft_free_str(char	*buff, char *saved_str);
+char	*ft_free_str(char	*str);
 char	*ft_strdup(char *s1);
 #endif

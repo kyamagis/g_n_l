@@ -6,7 +6,7 @@
 /*   By: kyamagis <kyamagis@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 16:47:41 by kyamagis          #+#    #+#             */
-/*   Updated: 2022/06/01 13:07:00 by kyamagis         ###   ########.fr       */
+/*   Updated: 2022/06/07 19:13:46 by kyamagis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,19 +69,14 @@ size_t	ft_strlcpy(char *dest, char *src, size_t size)
 	return (lensrc);
 }
 
-char	*ft_free_str(char	*buff, char *saved_str)
+char	*ft_free_str(char	*str)
 {
-	if (buff != NULL)
+	if (str != NULL)
 	{
-		free(buff);
-		buff = NULL;
+		free(str);
+		str = NULL;
 	}
-	if (saved_str != NULL)
-	{
-		free(saved_str);
-		saved_str = NULL;
-	}
-	return (NULL);
+	return (str);
 }
 
 char	*ft_strdup(char *s1)

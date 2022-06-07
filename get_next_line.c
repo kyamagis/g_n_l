@@ -6,7 +6,7 @@
 /*   By: kyamagis <kyamagis@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 10:45:21 by kyamagis          #+#    #+#             */
-/*   Updated: 2022/06/01 13:07:03 by kyamagis         ###   ########.fr       */
+/*   Updated: 2022/06/07 19:28:54 by kyamagis         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static char	*dup_nl_to_null(char *saved_str)
 	if (saved_str[nl_point] == '\n')
 		nl_point++;
 	tmp_str = ft_strdup(&saved_str[nl_point]);
-	ft_free_str(NULL, saved_str);
+	ft_free_str(saved_str);
 	if (tmp_str == NULL)
 		return (NULL);
 	saved_str = tmp_str;
@@ -66,26 +66,22 @@ static char	*ft_join_to_null(char	*saved_str, char *buff)
 static char	*read_to_null(int fd, char *saved_str)
 {
 	ssize_t	readsz;
-	char	*buff;
+	char	buff[BUFFER_SIZE + 1];
 	char	*tmp_str;
 
-	buff = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
-	if (buff == NULL)
-		return (NULL);
 	readsz = 1;
 	while (0 < readsz && ft_strchr(saved_str, '\n') == NULL)
 	{
 		readsz = read(fd, buff, BUFFER_SIZE);
 		if (readsz == -1 || (readsz == 0 && saved_str[0] == '\0'))
-			return (ft_free_str(buff, saved_str));
+			return (ft_free_str(saved_str));
 		buff[readsz] = '\0';
 		tmp_str = ft_join_to_null(saved_str, buff);
 		if (tmp_str == NULL)
-			return (ft_free_str(buff, saved_str));
-		ft_free_str(NULL, saved_str);
+			return (ft_free_str(saved_str));
+		ft_free_str(saved_str);
 		saved_str = tmp_str;
 	}
-	ft_free_str(buff, NULL);
 	return (saved_str);
 }
 
@@ -107,10 +103,10 @@ char	*get_next_line(int fd)
 		return (NULL);
 	output_line = dup_to_nl(saved_str);
 	if (output_line == NULL)
-		return (ft_free_str(NULL, saved_str));
+		return (ft_free_str(saved_str));
 	saved_str = dup_nl_to_null(saved_str);
 	if (saved_str == NULL)
-		return (ft_free_str(output_line, NULL));
+		return (ft_free_str(output_line));
 	return (output_line);
 }
 
